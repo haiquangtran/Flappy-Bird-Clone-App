@@ -42,17 +42,17 @@ public class GameScreen extends View implements OnTouchListener{
 	//tap instruction
 	public Bitmap tap;
 	//Gap
-	private int gapCounter; 
+	private double gapCounter; 
 	public static int GAME_WIDTH;
 	public static int GAME_HEIGHT;
 	//STATE
 	public GameState state = GameState.MENU;
 	//Start gap
-	private int startCounter;
+	private double startCounter;
 	private boolean startPipes;
 	//Dimensions
 	private int pipeWidth = GAME_WIDTH/6;
-	private int gap = GAME_WIDTH/2 - pipeWidth/2; 
+	private int gap = (GAME_WIDTH/2) - (pipeWidth/2); 
 	private int pipeGap = (int) (GAME_HEIGHT * 0.25);
 	private int jump = (int) ((GAME_HEIGHT * 0.10625)/20);	//20 is the clock ticks
 	private int pipeHeight1 = GAME_HEIGHT/2 - pipeGap/2;
@@ -86,10 +86,12 @@ public class GameScreen extends View implements OnTouchListener{
 	private Button startButt;
 	//Replay Button
 	private Button replayButt;
-    private Bitmap replay;
 	//Brush 
 	private Paint brush = new Paint();
-
+	//SPEED
+	private float speed = (float) (GameScreen.GAME_WIDTH*0.002083); 
+	
+	
 	public GameScreen(Context context) {
 		super(context);
 		setUp(context);
@@ -288,23 +290,24 @@ public class GameScreen extends View implements OnTouchListener{
 
 			//Clock ticks
 			birdy.clockTick();
-
-			//Start interval with pipes
-			if (startCounter == GAME_WIDTH){
+			//TODO:
+			//Start interval with pipes 
+			if (startCounter >= GAME_WIDTH){
 				startPipes = true;
 			} else if (!startPipes){
-				startCounter++;
+				startCounter+=speed;
 			}
-
+			//Pillars start coming now...
 			if (startPipes){
+				
 				obs.clockTick();
 				topObs.clockTick();
 				//Create gap with second pipe
-				if (gapCounter == obs.getWidth() + gap){
+				if (gapCounter >= gap + obs.getWidth()){
 					obs2.clockTick();
 					topObs2.clockTick();
 				} else {
-					gapCounter++;
+					gapCounter+=speed;
 				}
 			}
 
@@ -338,6 +341,7 @@ public class GameScreen extends View implements OnTouchListener{
 		int random = (int) (Math.random() * 3);
 
 		if (!obstacle2){
+			//First Pillar
 			switch (random){
 			case 0:
 				obs = new Obstacle(0, false, pipe1);
@@ -353,6 +357,7 @@ public class GameScreen extends View implements OnTouchListener{
 				break;
 			}
 		} else {
+			//Second Pillar
 			switch (random){
 			case 0:
 				obs2 = new Obstacle(0,false, pipe1);
@@ -410,7 +415,7 @@ public class GameScreen extends View implements OnTouchListener{
 	}
 
 	/**
-	 * Fall Animation - Plummets into it's death
+	 * Fall Animation - Plummets into its death
 	 */
 	public void deadFallAnimation(){
 

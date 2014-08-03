@@ -49,6 +49,7 @@ public class Obstacle {
 	 * clock tick
 	 */
 	public void clockTick(){
+		//TODO: 
 		//Continuous movement of obstacles 
 		if (movement  <= GameScreen.GAME_WIDTH + image.getWidth()){
 			movement += speed;
